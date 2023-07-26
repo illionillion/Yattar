@@ -1,4 +1,4 @@
-package com.dmm.bootcamp.yatter2023.ui.timeline
+package com.dmm.bootcamp.yatter2023.ui.post
 
 import android.content.Context
 import android.content.Intent
@@ -6,39 +6,36 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.Surface
-import com.dmm.bootcamp.yatter2023.ui.post.PostActivity
 import com.dmm.bootcamp.yatter2023.ui.theme.Yatter2023Theme
 import org.koin.androidx.viewmodel.ext.android.viewModel
-/**
- * パブリックタイムラインのActivityを実装
- */
-class PublicTimelineActivity : AppCompatActivity() {
+
+
+class PostActivity: AppCompatActivity() {
     companion object {
-        // Activityクラスをインスタンス化するメソッドを用意する
         fun newIntent(context: Context): Intent = Intent(
             context,
-            PublicTimelineActivity::class.java,
+            PostActivity::class.java,
         )
     }
 
-    private val viewModel: PublicTimelineViewModel by viewModel()
+    private val viewModel: PostViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             Yatter2023Theme {
                 Surface {
-                    PublicTimelinePage(viewModel = viewModel)
+                    PostPage(viewModel = viewModel)
                 }
             }
         }
-        viewModel.navigateToPost.observe(this) {
-            startActivity(PostActivity.newIntent(this))
+
+        viewModel.onCreate()
+
+        viewModel.goBack.observe(this) {
+            finish()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.onResume()
-    }
 }
