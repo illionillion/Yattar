@@ -1,7 +1,6 @@
 package com.dmm.bootcamp.yatter2023
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
@@ -11,10 +10,13 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.dmm.bootcamp.yatter2023.ui.login.LoginActivity
 import com.dmm.bootcamp.yatter2023.ui.theme.Yatter2023Theme
 import com.dmm.bootcamp.yatter2023.ui.timeline.PublicTimelineActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
+  private val viewModel: MainViewModel by viewModel()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -35,7 +37,20 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    startActivity(PublicTimelineActivity.newIntent(this))
+    viewModel.onCreate()
+
+    viewModel.navigateToPublicTimeline.observe(this) {
+      startActivity(PublicTimelineActivity.newIntent(this))
+      finish()
+    }
+
+    viewModel.navigateToLogin.observe(this) {
+      startActivity(LoginActivity.newIntent(this))
+      finish()
+    }
+
+
+    startActivity(LoginActivity.newIntent(this))
     finish()
 
 //    val content: View = findViewById(android.R.id.content) // スプラッシュ画面をずっと表示させるコード
