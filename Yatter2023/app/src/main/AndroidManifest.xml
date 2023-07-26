@@ -30,6 +30,9 @@
         </activity>
 
 <!--    追加    -->
+        <activity
+            android:name=".ui.timeline.PublicTimelineActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

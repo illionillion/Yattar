@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.dmm.bootcamp.yatter2023.ui.theme.Yatter2023Theme
+import com.dmm.bootcamp.yatter2023.ui.timeline.PublicTimelineActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +34,9 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
+
+    startActivity(PublicTimelineActivity.newIntent(this))
+    finish()
 
 //    val content: View = findViewById(android.R.id.content) // スプラッシュ画面をずっと表示させるコード
 //    content.viewTreeObserver.addOnPreDrawListener { // Check if the initial data is ready.
