@@ -3,7 +3,10 @@ package com.dmm.bootcamp.yatter2023.ui.timeline
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dmm.bootcamp.yatter2023.domain.repository.AccountRepository
 import com.dmm.bootcamp.yatter2023.domain.repository.StatusRepository
+import com.dmm.bootcamp.yatter2023.infra.domain.converter.MeConverter
+import com.dmm.bootcamp.yatter2023.infra.domain.model.MeImpl
 import com.dmm.bootcamp.yatter2023.util.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PublicTimelineViewModel(
+    private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     ) : ViewModel() {
     private val _uiState: MutableStateFlow<PublicTimelineUiState> =
@@ -20,9 +24,11 @@ class PublicTimelineViewModel(
     val navigateToPost: LiveData<Unit> = _navigateToPost
 
     private suspend fun fetchPublicTimeline() {
+        val myAccount = accountRepository.findMe()
         val statusList = statusRepository.findAllPublic() // 1
         _uiState.update {
             it.copy(
+                myAccount = myAccount?.let { it -> MeConverter.convertToMe(it) } as MeImpl,
                 statusList = StatusConverter.convertToBindingModel(statusList), // 2
             )
         }

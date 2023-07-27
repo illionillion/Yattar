@@ -1,5 +1,6 @@
 package com.dmm.bootcamp.yatter2023.ui.timeline
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.rounded.AccountBox
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
@@ -44,13 +46,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.dmm.bootcamp.yatter2023.R
+import com.dmm.bootcamp.yatter2023.domain.model.Account
+import com.dmm.bootcamp.yatter2023.domain.model.AccountId
+import com.dmm.bootcamp.yatter2023.domain.model.Username
+import com.dmm.bootcamp.yatter2023.infra.domain.model.MeImpl
 import com.dmm.bootcamp.yatter2023.ui.theme.Yatter2023Theme
 import com.dmm.bootcamp.yatter2023.ui.timeline.bindingmodel.StatusBindingModel
 import kotlinx.coroutines.launch
+import java.net.URL
 
 /**
  * パブリックタイムラインのTemplateを実装
@@ -58,6 +67,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PublicTimelineTemplate(
+    myAccount: Account,
     statusList: List<StatusBindingModel>,
     isLoading: Boolean,
     isRefreshing: Boolean,
@@ -69,6 +79,11 @@ fun PublicTimelineTemplate(
     val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
 
     val bottomNavItems = listOf(
+        BottomNavItem(
+            name = "Profile",
+            route = "profile",
+            icon = Icons.Rounded.AccountBox,
+        ),
         BottomNavItem(
             name = "Home",
             route = "home",
@@ -85,6 +100,7 @@ fun PublicTimelineTemplate(
             icon = Icons.Rounded.Settings,
         ),
     )
+    println(myAccount.avatar)
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -92,6 +108,24 @@ fun PublicTimelineTemplate(
             Divider()
             // Drawer items
             // ユーザー名とアイコン
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AsyncImage(
+                    modifier = Modifier.size(64.dp)
+                        .padding(8.dp)
+                        .clip(CircleShape),
+                    model = myAccount.avatar.toString(),
+                    contentDescription = "アバター画像",
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    modifier = Modifier,
+//                        .padding(start = 24.dp),
+                    text = myAccount.username.value,
+                )
+            }
 //            Box(
 //                modifier = Modifier
 //                    .size(64.dp)
@@ -113,7 +147,7 @@ fun PublicTimelineTemplate(
 //                )
 //            }
 
-//            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             // ナビゲート
             bottomNavItems.forEach { item ->
@@ -124,7 +158,7 @@ fun PublicTimelineTemplate(
                         .fillMaxWidth()
                         .padding(4.dp)
                         .clickable {
-                            if(item.name == "Create") {
+                            if (item.name == "Create") {
                                 onClickPost()
                             }
                             coroutineScope.launch {
@@ -241,6 +275,16 @@ private fun PublicTimelineTemplatePreview() {
                 isRefreshing = false,
                 onClickPost = {},
                 onRefresh = {},
+                myAccount = MeImpl(
+                    id = AccountId("TEST_USER"),
+                    username = Username("TEST_USER"),
+                    displayName = "TEST - USER",
+                    note = "",
+                    avatar = null,
+                    header = null,
+                    followerCount = 0,
+                    followingCount = 0,
+                )
             )
         }
     }

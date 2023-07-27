@@ -12,6 +12,7 @@ fun PublicTimelinePage(viewModel: PublicTimelineViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     PublicTimelineTemplate(
+        myAccount = uiState.myAccount,
         statusList = uiState.statusList,
         isLoading = uiState.isLoading,
         isRefreshing = uiState.isRefreshing,
