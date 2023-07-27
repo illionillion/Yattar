@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
       finish()
     }
 
-    startActivity(LoginActivity.newIntent(this))
-    finish()
+//    startActivity(LoginActivity.newIntent(this))
+//    finish()
 
 //    val content: View = findViewById(android.R.id.content) // スプラッシュ画面をずっと表示させるコード
 //    content.viewTreeObserver.addOnPreDrawListener { // Check if the initial data is ready.
