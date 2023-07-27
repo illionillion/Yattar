@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.rounded.AccountBox
 import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -99,8 +100,12 @@ fun PublicTimelineTemplate(
             route = "settings",
             icon = Icons.Rounded.Settings,
         ),
+        BottomNavItem(
+            name = "Logout",
+            route = "logout",
+            icon = Icons.Rounded.ExitToApp,
+        ),
     )
-    println(myAccount.avatar)
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -118,7 +123,7 @@ fun PublicTimelineTemplate(
                         .clip(CircleShape),
                     model = myAccount.avatar.toString(),
                     contentDescription = "アバター画像",
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
                 Text(
                     modifier = Modifier,
@@ -158,9 +163,18 @@ fun PublicTimelineTemplate(
                         .fillMaxWidth()
                         .padding(4.dp)
                         .clickable {
-                            if (item.name == "Create") {
-                                onClickPost()
+                            when (item.name) {
+                                "Create" -> {
+                                    onClickPost()
+                                }
+                                "Logout" -> {
+
+                                }
+                                else -> {
+
+                                }
                             }
+
                             coroutineScope.launch {
                                 scaffoldState.drawerState.close()
                             }
@@ -179,13 +193,15 @@ fun PublicTimelineTemplate(
                     ) {
                         Icon(
                             imageVector = item.icon,
-                            contentDescription = "${item.name} Icon"
+                            contentDescription = "${item.name} Icon",
+                            tint = if(item.name == "Logout") Color.Red else Color.DarkGray
                         )
 
                         Text(
                             modifier = Modifier
                                 .padding(start = 24.dp),
                             text = item.name,
+                            color = if(item.name == "Logout") Color.Red else Color.DarkGray
                         )
                     }
                 }
