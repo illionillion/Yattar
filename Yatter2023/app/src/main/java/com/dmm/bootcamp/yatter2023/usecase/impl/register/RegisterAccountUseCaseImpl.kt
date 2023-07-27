@@ -12,22 +12,22 @@ class RegisterAccountUseCaseImpl(
   private val mePreferences: MePreferences
 ) : RegisterAccountUseCase {
   override suspend fun execute(
-    username: String,
-    password: String
+    username: Username,
+    password: Password
   ): RegisterAccountUseCaseResult {
-    if (username == "") {
+    if (username.value.isBlank()) {
       return RegisterAccountUseCaseResult.Failure.EmptyUsername
     }
-    if (password == "") {
+    if (password.value.isBlank()) {
       return RegisterAccountUseCaseResult.Failure.EmptyPassword
     }
-    val newPassword = Password(password)
+    val newPassword = Password(password.value)
     if (!newPassword.validate()) {
       return RegisterAccountUseCaseResult.Failure.InvalidPassword
     }
 
     val me = accountRepository.create(
-      Username(username),
+      Username(username.value),
       newPassword
     )
     mePreferences.putUserName(me.username.value)

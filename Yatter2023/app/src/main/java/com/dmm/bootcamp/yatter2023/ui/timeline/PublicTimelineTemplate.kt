@@ -110,8 +110,8 @@ private fun PublicTimelineTemplatePreview() {
                         attachmentMediaList = listOf()
                     )
                 ),
-                isLoading = false,
-                isRefreshing = false,
+                isLoading = true,
+                isRefreshing = true,
                 onClickPost = {},
                 onRefresh = {},
             )

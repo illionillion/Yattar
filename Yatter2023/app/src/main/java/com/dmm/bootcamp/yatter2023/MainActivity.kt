@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
       finish()
     }
 
-
     startActivity(LoginActivity.newIntent(this))
     finish()
 

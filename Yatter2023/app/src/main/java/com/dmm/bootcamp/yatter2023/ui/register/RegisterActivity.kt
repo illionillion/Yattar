@@ -1,4 +1,4 @@
-package com.dmm.bootcamp.yatter2023.ui.login
+package com.dmm.bootcamp.yatter2023.ui.register
 
 import android.content.Context
 import android.content.Intent
@@ -26,18 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dmm.bootcamp.yatter2023.ui.register.RegisterActivity
+import com.dmm.bootcamp.yatter2023.ui.login.LoginActivity
 import com.dmm.bootcamp.yatter2023.ui.theme.Yatter2023Theme
-import com.dmm.bootcamp.yatter2023.ui.timeline.PublicTimelineActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginActivity : ComponentActivity() {
-    private val viewModel: LoginViewModel by viewModel()
+class RegisterActivity: ComponentActivity() {
+
+    private val viewModel: RegisterViewModel by viewModel()
 
     companion object {
         fun newIntent(context: Context): Intent = Intent(
             context,
-            LoginActivity::class.java,
+            RegisterActivity::class.java
         )
     }
 
@@ -47,40 +47,34 @@ class LoginActivity : ComponentActivity() {
         setContent {
             Yatter2023Theme {
                 Surface {
-                    LoginPage(viewModel = viewModel)
+                    RegisterPage(viewModel = viewModel)
                 }
             }
         }
 
-        viewModel.navigateToPublicTimeline.observe(this) {
-            startActivity(PublicTimelineActivity.newIntent(this))
-            finish()
-        }
-
-        viewModel.navigateToRegister.observe(this) {
-            //TODO: 会員登録画面への遷移
-            startActivity(RegisterActivity.newIntent(this))
+        viewModel.navigateToLogin.observe(this) {
+            startActivity(LoginActivity.newIntent(this))
             finish()
         }
     }
 }
 
 @Composable
-fun LoginTemplate(
+fun RegisterTemplate(
     userName: String,
     onChangedUserName: (String) -> Unit,
     password: String,
     onChangedPassword: (String) -> Unit,
-    isEnableLogin: Boolean,
+    isEnableRegister: Boolean,
     isLoading: Boolean,
     onClickLogin: () -> Unit,
     onClickRegister: () -> Unit,
 ) {
-    Scaffold(
+    Scaffold (
         topBar = {
-            TopAppBar(
+            TopAppBar (
                 title = {
-                    Text(text = "ログイン")
+                    Text(text = "新規登録")
                 }
             )
         }
@@ -94,83 +88,81 @@ fun LoginTemplate(
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Text(
+                    text = "ユーザー名",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    text = "ユーザー名"
+                        .padding(top = 16.dp)
                 )
                 OutlinedTextField(
+                    value = userName, 
+                    onValueChange = onChangedUserName,
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    value = userName,
-                    onValueChange = onChangedUserName,
                     placeholder = {
                         Text(text = "username")
-                    },
+                    }
                 )
 
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = "パスワード"
+                    text = "パスワード",
+                    modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
+                    value = password,
+                    onValueChange = onChangedPassword,
                     singleLine = true,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
-                    value = password,
-                    onValueChange = onChangedPassword,
                     placeholder = {
                         Text(text = "password")
-                    },
+                    }
                 )
+
                 Button(
-                    enabled = isEnableLogin,
-                    onClick = onClickLogin,
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    onClick = onClickRegister,
+                    enabled = isEnableRegister,
+                    modifier =  Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "ログイン")
+                    Text(text = "新規登録")
                 }
 
                 Divider(modifier = Modifier.padding(vertical = 16.dp))
 
                 Text(
-                    text = "はじめてご利用の方は",
+                    text = "会員登録済みの方が",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.body2
                 )
                 TextButton(
-                    onClick = onClickRegister,
+                    onClick = onClickLogin,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "新規会員登録")
+                    Text(text = "ログイン")
                 }
-
             }
 
             if (isLoading) {
                 CircularProgressIndicator()
             }
         }
-
     }
 }
 
 @Preview
 @Composable
-fun LoginTemplatePreview() {
+fun RegisterTemplatePreview() {
     Yatter2023Theme {
         Surface {
-            LoginTemplate(
+            RegisterTemplate(
                 userName = "username",
                 onChangedUserName = {},
-                password = "password",
+                password = "P@ssword",
                 onChangedPassword = {},
-                isEnableLogin = true,
+                isEnableRegister = true,
                 isLoading = true,
                 onClickLogin = {},
                 onClickRegister = {},
