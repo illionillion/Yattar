@@ -122,7 +122,8 @@ fun PublicTimelineTemplate(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AsyncImage(
-                    modifier = Modifier.size(64.dp)
+                    modifier = Modifier
+                        .size(64.dp)
                         .padding(8.dp)
                         .clip(CircleShape),
                     model = myAccount.avatar.toString(),
@@ -158,65 +159,79 @@ fun PublicTimelineTemplate(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            // ナビゲート
-            bottomNavItems.forEach { item ->
-//                val selected = item.route == backStackEntry.value?.destination?.route
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(8.dp),
+            ) {
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                        .clickable {
-                            when (item.name) {
-                                "Create" -> {
-                                    onClickPost()
+                // ナビゲート
+                items(bottomNavItems) { item ->
+                    // val selected = item.route == backStackEntry.value?.destination?.route
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .clickable {
+                                when (item.name) {
+                                    "Create" -> {
+                                        onClickPost()
+                                    }
+
+                                    "Logout" -> {
+
+                                        AlertDialog
+                                            .Builder(context)
+                                            .setTitle("ログアウト")
+                                            .setTitle("ログアウトしますか？")
+                                            .setPositiveButton(
+                                                "OK",
+                                                DialogInterface.OnClickListener { _, _ ->
+                                                    onClickLogout()
+                                                })
+                                            .setNegativeButton(
+                                                "Cancel",
+                                                DialogInterface.OnClickListener { _, _ -> })
+                                            .show()
+                                    }
+
+                                    else -> {
+
+                                    }
                                 }
-                                "Logout" -> {
 
-                                    AlertDialog.Builder(context)
-                                        .setTitle("ログアウト")
-                                        .setTitle("ログアウトしますか？")
-                                        .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
-                                            onClickLogout()
-                                        })
-                                        .setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ ->  })
-                                        .show()
+                                coroutineScope.launch {
+                                    scaffoldState.drawerState.close()
                                 }
-                                else -> {
-
-                                }
-                            }
-
-                            coroutineScope.launch {
-                                scaffoldState.drawerState.close()
-                            }
 //                            navController.navigate(item.route)
 
-                        },
+                            },
 //                    backgroundColor = if (selected) Color.Green else Color.White,
-                    elevation = 0.dp,
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
+                        elevation = 0.dp,
+                        shape = RoundedCornerShape(12.dp)
                     ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = "${item.name} Icon",
-                            tint = if(item.name == "Logout") Color.Red else Color.DarkGray
-                        )
-
-                        Text(
+                        Row(
                             modifier = Modifier
-                                .padding(start = 24.dp),
-                            text = item.name,
-                            color = if(item.name == "Logout") Color.Red else Color.DarkGray
-                        )
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = "${item.name} Icon",
+                                tint = if (item.name == "Logout") Color.Red else Color.DarkGray
+                            )
+
+                            Text(
+                                modifier = Modifier
+                                    .padding(start = 24.dp),
+                                text = item.name,
+                                color = if (item.name == "Logout") Color.Red else Color.DarkGray
+                            )
+                        }
                     }
                 }
+
             }
 
         },
@@ -245,7 +260,7 @@ fun PublicTimelineTemplate(
             }
         },
 
-    ) {
+        ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
