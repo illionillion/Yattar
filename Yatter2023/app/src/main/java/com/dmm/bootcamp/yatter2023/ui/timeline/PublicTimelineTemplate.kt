@@ -1,5 +1,7 @@
 package com.dmm.bootcamp.yatter2023.ui.timeline
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -48,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,11 +77,12 @@ fun PublicTimelineTemplate(
     isRefreshing: Boolean,
     onClickPost: () -> Unit,
     onRefresh: () -> Unit,
+    onClickLogout: () -> Unit,
 ) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val pullRefreshState = rememberPullRefreshState(isRefreshing, onRefresh)
-
+    val context = LocalContext.current
     val bottomNavItems = listOf(
         BottomNavItem(
             name = "Profile",
@@ -169,6 +173,14 @@ fun PublicTimelineTemplate(
                                 }
                                 "Logout" -> {
 
+                                    AlertDialog.Builder(context)
+                                        .setTitle("ログアウト")
+                                        .setTitle("ログアウトしますか？")
+                                        .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
+                                            onClickLogout()
+                                        })
+                                        .setNegativeButton("Cancel", DialogInterface.OnClickListener { _, _ ->  })
+                                        .show()
                                 }
                                 else -> {
 
@@ -291,6 +303,7 @@ private fun PublicTimelineTemplatePreview() {
                 isRefreshing = false,
                 onClickPost = {},
                 onRefresh = {},
+                onClickLogout = {},
                 myAccount = MeImpl(
                     id = AccountId("TEST_USER"),
                     username = Username("TEST_USER"),

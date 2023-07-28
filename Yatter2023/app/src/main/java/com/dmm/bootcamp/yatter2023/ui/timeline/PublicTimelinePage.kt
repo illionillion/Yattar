@@ -18,6 +18,7 @@ fun PublicTimelinePage(viewModel: PublicTimelineViewModel) {
         isRefreshing = uiState.isRefreshing,
         onClickPost = viewModel::onClickPost,
         onRefresh = viewModel::onRefresh,
+        onClickLogout = viewModel::onClickLogout,
     )
 
 }
