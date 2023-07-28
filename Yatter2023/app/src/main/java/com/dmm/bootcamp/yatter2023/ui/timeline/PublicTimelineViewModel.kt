@@ -19,7 +19,7 @@ class PublicTimelineViewModel(
     private val accountRepository: AccountRepository,
     private val statusRepository: StatusRepository,
     private val logoutService: LogoutService,
-    ) : ViewModel() {
+) : ViewModel() {
     private val _uiState: MutableStateFlow<PublicTimelineUiState> =
         MutableStateFlow(PublicTimelineUiState.empty())
     val uiState: StateFlow<PublicTimelineUiState> = _uiState
@@ -27,6 +27,8 @@ class PublicTimelineViewModel(
     val navigateToPost: LiveData<Unit> = _navigateToPost
     private val _navigateToLogin: SingleLiveEvent<Unit> = SingleLiveEvent()
     val navigateToLogin: LiveData<Unit> = _navigateToLogin
+    private val _navigateToProfile: SingleLiveEvent<Unit> = SingleLiveEvent()
+    val navigateToProfile: LiveData<Unit> = _navigateToProfile
 
     private suspend fun fetchPublicTimeline() {
         val myAccount = accountRepository.findMe()
@@ -58,14 +60,28 @@ class PublicTimelineViewModel(
     fun onClickLogout() {
 
         viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true) } // 2
             logoutService.execute()
             _navigateToLogin.value = Unit
+            _uiState.update { it.copy(isRefreshing = false) } // 4
         }
 
     }
 
+    fun onClickProfile() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true) }
+            _navigateToProfile.value = Unit
+            _uiState.update { it.copy(isRefreshing = false) }
+        }
+    }
+
     fun onClickPost() {
-        _navigateToPost.value = Unit
+        viewModelScope.launch {
+            _uiState.update { it.copy(isRefreshing = true) }
+            _navigateToPost.value = Unit
+            _uiState.update { it.copy(isRefreshing = false) }
+        }
     }
 
 }

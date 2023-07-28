@@ -73,6 +73,7 @@ fun PublicTimelineTemplate(
     onClickPost: () -> Unit,
     onRefresh: () -> Unit,
     onClickLogout: () -> Unit,
+    onClickProfile: () -> Unit,
 ) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
@@ -174,6 +175,10 @@ fun PublicTimelineTemplate(
                                                 "Cancel",
                                                 DialogInterface.OnClickListener { _, _ -> })
                                             .show()
+                                    }
+
+                                    "Profile" -> {
+                                        onClickProfile()
                                     }
 
                                     else -> {
@@ -300,6 +305,7 @@ private fun PublicTimelineTemplatePreview() {
                 onClickPost = {},
                 onRefresh = {},
                 onClickLogout = {},
+                onClickProfile = {},
                 myAccount = MeImpl(
                     id = AccountId("TEST_USER"),
                     username = Username("TEST_USER"),

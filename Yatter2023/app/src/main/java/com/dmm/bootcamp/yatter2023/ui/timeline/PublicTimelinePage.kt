@@ -19,6 +19,7 @@ fun PublicTimelinePage(viewModel: PublicTimelineViewModel) {
         onClickPost = viewModel::onClickPost,
         onRefresh = viewModel::onRefresh,
         onClickLogout = viewModel::onClickLogout,
+        onClickProfile = viewModel::onClickProfile
     )
 
 }
